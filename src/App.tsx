@@ -1,26 +1,31 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import ImageEditor from './ImageEditor';
+import { ImageProps, ArrowImageObject } from './Image';
 
-function App() {
+const App: React.FC = () => {
+  const [imageProps, setImageProps] = useState<ImageProps>({
+    src: "https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w1200/2023/10/free-images.jpg",
+    crop: { x: 0, y: 0, w: 100, h: 100 },
+    objects: []
+  });
+  const handleSave = (newImageProps: ImageProps) => {
+    setImageProps(newImageProps);
+    const { src, crop, objects } = newImageProps;
+    const cropString = `${crop.x},${crop.y}-${crop.x + crop.w},${crop.y + crop.h}`;
+    const objectsString = objects.map((obj) => {
+      if (obj.type === "arrow") {
+        const arrowObj = obj as ArrowImageObject;
+        return `${arrowObj.point.x},${arrowObj.point.y}:arrow:${arrowObj.comment || ""}`;
+      }
+      return "";
+    });
+    console.log(`{% image src="${src}" crop="${cropString}" objects=[${objectsString.join(", ")}] %}`);
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <ImageEditor props={imageProps} onSave={handleSave} />
     </div>
   );
-}
+};
 
 export default App;
