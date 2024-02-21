@@ -51,5 +51,4 @@ const Image: React.FC<{
     </div>
   );
 };
-
 export default Image;

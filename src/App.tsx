@@ -5,7 +5,7 @@ import { ImageProps, ArrowImageObject } from './Image';
 const App: React.FC = () => {
   const [imageProps, setImageProps] = useState<ImageProps>({
     src: "https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w1200/2023/10/free-images.jpg",
-    crop: { x: 0, y: 0, w: 100, h: 100 },
+    crop: { x: 0, y: 0, w: 1000, h: 666 },
     objects: []
   });
   const handleSave = (newImageProps: ImageProps) => {
