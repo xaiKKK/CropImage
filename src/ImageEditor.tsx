@@ -56,15 +56,23 @@ const ImageEditor: React.FC<ImageEditorProps> = ({ props, onSave }) => {
   };
 
   const renderArrow = (object: ArrowImageObject, index: number) => {
-    const handleMouseDown = (e: React.MouseEvent<SVGElement>) => {
+    const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
       e.preventDefault();
-      
-      const rect = e.currentTarget.getBoundingClientRect();
-      const offsetX = e.clientX - rect.left;
-      const offsetY = e.clientY + 101 - rect.top;
-
+  
+      const container = e.currentTarget.parentElement;
+      if (!container) return; // Проверка наличия контейнера
+  
+      const containerRect = container.getBoundingClientRect();
+      const initialX = object.point.x; 
+      const initialY = object.point.y; 
+      const offsetX = e.clientX - initialX; 
+      const offsetY = e.clientY - initialY; 
+  
       const onMouseMove = (e: MouseEvent) => {
-        handleArrowMove(index, { x: e.clientX - cropX - offsetX, y: e.clientY - cropY - offsetY });
+        handleArrowMove(index, { 
+          x: e.clientX - offsetX - containerRect.left,
+          y: e.clientY - offsetY + 100 - containerRect.top
+        });
       };
       const onMouseUp = () => {
         window.removeEventListener('mousemove', onMouseMove);
@@ -73,16 +81,12 @@ const ImageEditor: React.FC<ImageEditorProps> = ({ props, onSave }) => {
       window.addEventListener('mousemove', onMouseMove);
       window.addEventListener('mouseup', onMouseUp);
     };
-
+  
     return (
-      <svg
-        key={index}
-        style={{ position: 'absolute', left: object.point.x, top: object.point.y, cursor: 'move' }}
-        onMouseDown={handleMouseDown}
-      >
-        <line x1="0" y1="0" x2="20" y2="20" stroke="white" strokeWidth="2" />
-        <text x="20" y="20">{object.comment}</text>
-      </svg>
+      <div key={index} style={{ position: 'absolute', left: object.point.x, top: object.point.y, cursor: 'move' }} onMouseDown={handleMouseDown}>
+        <img src="https://www.cossco.ru/local/templates/iteraciya/assets/img/icons/arrow-left.svg" alt="arrow" style={{ width: '30px' }} />
+        <span>{object.comment}</span>
+      </div>
     );
   };
 
