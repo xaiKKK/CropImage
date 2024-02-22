@@ -72,7 +72,7 @@ const ImageEditor: React.FC<ImageEditorProps> = ({ props, onSave }) => {
    
     return (
       <div key={index} style={{ position: 'absolute', left: object.point.x, top: object.point.y, cursor: 'move' }} onMouseDown={handleMouseDown}>
-        <img src="https://www.cossco.ru/local/templates/iteraciya/assets/img/icons/arrow-left.svg" alt="arrow" style={{ width: '30px', transform: 'rotate(45deg)', filter: 'hue-rotate(0deg) saturate(100%) brightness(100%) contrast(100%)' }} />
+        <img src="https://grizly.club/uploads/posts/2023-08/1693269477_grizly-club-p-kartinki-krasnaya-strelka-vpravo-bez-fona-32.png" alt="arrow" style={{ width: '50px', transform: 'rotate(140deg)', filter: 'hue-rotate(0deg) saturate(100%) brightness(100%) contrast(100%)' }} />
         <span>{object.comment}</span>
       </div>
     );
@@ -85,7 +85,7 @@ const ImageEditor: React.FC<ImageEditorProps> = ({ props, onSave }) => {
   return (
     <div>
       <Image props={{ ...props, crop: { x: cropX, y: cropY, w: cropWidth, h: cropHeight }, objects }} onArrowMove={handleArrowMove} renderArrow={renderArrow} />
-      {showResizableBox && <ResizableBox onResize={handleResize} />}
+      {showResizableBox && <ResizableBox onResize={handleResize} initialWidth={props.crop.w} initialHeight={props.crop.h} />}
       <button onClick={handleSave}>Save</button>
       <button onClick={handleAddArrow}>Add Arrow</button>
       <button onClick={showResizableBoxHandler}>Show Resizable Box</button>

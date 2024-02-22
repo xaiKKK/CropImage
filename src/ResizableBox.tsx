@@ -2,10 +2,12 @@ import React, { useCallback, useState } from "react";
 
 interface ResizableBoxProps {
   onResize: (width: number, height: number) => void;
+  initialWidth: number;
+  initialHeight: number;
 }
 
-const ResizableBox: React.FC<ResizableBoxProps> = ({ onResize }) => {
-  const [size, setSize] = useState({ width:   100, height:   100 });
+const ResizableBox: React.FC<ResizableBoxProps> = ({ onResize, initialWidth, initialHeight }) => {
+  const [size, setSize] = useState({ width: initialWidth, height: initialHeight });
   const [isResizing, setIsResizing] = useState(false);
 
   const startResizing = useCallback((e: React.MouseEvent) => {
@@ -52,16 +54,16 @@ const ResizableBox: React.FC<ResizableBoxProps> = ({ onResize }) => {
         height: `${size.height}px`,
         border: "2px solid black",
         position: "absolute",
-        top:   0,
-        left:   0,
-        zIndex:   1000,
+        top:  0,
+        left:  0,
+        zIndex:  1000,
       }}
     >
       <div
         style={{
           position: "absolute",
-          bottom:   0,
-          right:   0,
+          bottom:  0,
+          right:  0,
           cursor: "nwse-resize",
           width: "20px",
           height: "20px",
