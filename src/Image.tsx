@@ -6,6 +6,7 @@ export interface Rect {
   w: number;
   h: number;
 }
+
 export interface Point {
   x: number;
   y: number;
@@ -26,13 +27,15 @@ export interface ImageProps {
   src: string;
   crop: Rect;
   objects: ImageObject[];
+  onClick?: () => void; 
 }
 
-const Image: React.FC<{ 
-  props: ImageProps; 
-  onArrowMove: (index: number, point: Point) => void; 
-  renderArrow: (object: ArrowImageObject, index: number) => JSX.Element 
-}> = ({ props, onArrowMove, renderArrow }) => {
+const Image: React.FC<{  
+  props: ImageProps;  
+  onArrowMove: (index: number, point: Point) => void;  
+  renderArrow: (object: ArrowImageObject, index: number) => JSX.Element;
+  onClick?: () => void; 
+}> = ({ props, onArrowMove, renderArrow, onClick }) => {
   const { src, crop, objects } = props;
 
   const handleArrowMove = (index: number, point: Point) => {
@@ -40,7 +43,7 @@ const Image: React.FC<{
   };
 
   return (
-    <div style={{ position: 'relative', width: `${crop.w}px`, height: `${crop.h}px`, overflow: 'hidden' }}>
+    <div style={{ position: 'relative', width: `${crop.w}px`, height: `${crop.h}px`, overflow: 'hidden' }} onClick={onClick}>
       <img src={src} alt="image" style={{ marginLeft: `-${crop.x}px`, marginTop: `-${crop.y}px` }} />
       {objects.map((object, index) => {
         if (object.type === "arrow") {
@@ -51,4 +54,5 @@ const Image: React.FC<{
     </div>
   );
 };
+
 export default Image;
