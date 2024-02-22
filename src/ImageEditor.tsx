@@ -33,7 +33,7 @@ const ImageEditor: React.FC<ImageEditorProps> = ({ props, onSave }) => {
   const handleAddArrow = () => {
     const newArrow: ArrowImageObject = {
       type: "arrow",
-      point: { x:   0, y:   0 },
+      point: { x:   0, y:   10 },
     };
     setObjects([...objects, newArrow]);
   };
