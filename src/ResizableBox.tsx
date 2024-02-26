@@ -4,9 +4,10 @@ interface ResizableBoxProps {
   onResize: (width: number, height: number) => void;
   initialWidth: number;
   initialHeight: number;
+  startPoint: { x: number; y: number }; 
 }
 
-const ResizableBox: React.FC<ResizableBoxProps> = ({ onResize, initialWidth, initialHeight }) => {
+const ResizableBox: React.FC<ResizableBoxProps> = ({ onResize, initialWidth, initialHeight, startPoint }) => {
   const [size, setSize] = useState({ width: initialWidth, height: initialHeight });
   const [isResizing, setIsResizing] = useState(false);
 
@@ -22,13 +23,13 @@ const ResizableBox: React.FC<ResizableBoxProps> = ({ onResize, initialWidth, ini
   const resize = useCallback(
     (e: MouseEvent) => {
       if (isResizing) {
-        const newWidth = e.clientX - document.getElementById("resizable-box")!.offsetLeft;
-        const newHeight = e.clientY - document.getElementById("resizable-box")!.offsetTop;
+        const newWidth = e.clientX - startPoint.x; 
+        const newHeight = e.clientY - startPoint.y; 
         setSize({ width: newWidth, height: newHeight });
         onResize(newWidth, newHeight);
       }
     },
-    [isResizing, onResize]
+    [isResizing, onResize, startPoint]
   );
 
   React.useEffect(() => {
@@ -54,20 +55,20 @@ const ResizableBox: React.FC<ResizableBoxProps> = ({ onResize, initialWidth, ini
         height: `${size.height}px`,
         border: "2px solid black",
         position: "absolute",
-        top:  0,
-        left:  0,
-        zIndex:  1000,
+        top: startPoint.y, 
+        left: startPoint.x, 
+        zIndex:   1000,
       }}
+      onMouseDown={startResizing}
     >
       <div
         style={{
           position: "absolute",
-          bottom:  0,
-          right:  0,
+          bottom:   0,
+          right:   0,
           cursor: "nwse-resize",
           width: "20px",
           height: "20px",
-          backgroundColor: "red",
         }}
         onMouseDown={startResizing}
       />

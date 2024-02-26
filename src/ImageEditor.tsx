@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import Image, { ImageProps, ArrowImageObject, Point } from './Image';
 import ResizableBox from './ResizableBox';
 
@@ -14,8 +14,15 @@ const ImageEditor: React.FC<ImageEditorProps> = ({ props, onSave }) => {
   const [cropHeight, setCropHeight] = useState(props.crop.h);
   const [objects, setObjects] = useState([...props.objects]);
   const [showResizableBox, setShowResizableBox] = useState(false);
+  const [startPoint, setStartPoint] = useState({ x:  0, y:  0 });
+  const [isButtonClicked, setIsButtonClicked] = useState(false); 
 
   const handleResize = (width: number, height: number) => {
+    const newCropX = startPoint.x;
+    const newCropY = startPoint.y;
+
+    setCropX(newCropX);
+    setCropY(newCropY);
     setCropWidth(width);
     setCropHeight(height);
   };
@@ -27,13 +34,14 @@ const ImageEditor: React.FC<ImageEditorProps> = ({ props, onSave }) => {
       objects: objects
     };
     onSave(newImageProps);
-    setShowResizableBox(false); 
+    setShowResizableBox(false);
+    setIsButtonClicked(false); 
   };
 
   const handleAddArrow = () => {
     const newArrow: ArrowImageObject = {
       type: "arrow",
-      point: { x:   0, y:   10 },
+      point: { x:  0, y:  10 },
     };
     setObjects([...objects, newArrow]);
   };
@@ -78,17 +86,29 @@ const ImageEditor: React.FC<ImageEditorProps> = ({ props, onSave }) => {
     );
   };
 
-  const showResizableBoxHandler = () => {
+  const handleStartResizing = (e: React.MouseEvent) => {
+    if (!isButtonClicked) return; 
+    e.preventDefault();
+    setStartPoint({ x: e.clientX, y: e.clientY });
     setShowResizableBox(true);
+  };
+
+  const handleButtonClick = () => {
+    setIsButtonClicked(true); 
   };
 
   return (
     <div>
-      <Image props={{ ...props, crop: { x: cropX, y: cropY, w: cropWidth, h: cropHeight }, objects }} onArrowMove={handleArrowMove} renderArrow={renderArrow} />
-      {showResizableBox && <ResizableBox onResize={handleResize} initialWidth={props.crop.w} initialHeight={props.crop.h} />}
+      <Image   
+        props={{ ...props, crop: { x: cropX, y: cropY, w: cropWidth, h: cropHeight }, objects }}   
+        onArrowMove={handleArrowMove}   
+        renderArrow={renderArrow}   
+        onClick={handleStartResizing} 
+      />
+      {showResizableBox && <ResizableBox onResize={handleResize} initialWidth={props.crop.w} initialHeight={props.crop.h} startPoint={startPoint} />}
       <button onClick={handleSave}>Save</button>
       <button onClick={handleAddArrow}>Add Arrow</button>
-      <button onClick={showResizableBoxHandler}>Show Resizable Box</button>
+      <button onClick={handleButtonClick}>Show Resizable Box</button>
     </div>
   );
 };

@@ -27,14 +27,14 @@ export interface ImageProps {
   src: string;
   crop: Rect;
   objects: ImageObject[];
-  onClick?: () => void; 
+  onClick?: (event: React.MouseEvent) => void;  
 }
 
-const Image: React.FC<{  
-  props: ImageProps;  
-  onArrowMove: (index: number, point: Point) => void;  
+const Image: React.FC<{   
+  props: ImageProps;   
+  onArrowMove: (index: number, point: Point) => void;   
   renderArrow: (object: ArrowImageObject, index: number) => JSX.Element;
-  onClick?: () => void; 
+  onClick?: (event: React.MouseEvent) => void; 
 }> = ({ props, onArrowMove, renderArrow, onClick }) => {
   const { src, crop, objects } = props;
 
@@ -43,7 +43,7 @@ const Image: React.FC<{
   };
 
   return (
-    <div style={{ position: 'relative', width: `${crop.w}px`, height: `${crop.h}px`, overflow: 'hidden' }} onClick={onClick}>
+    <div onClick={(event) => onClick && onClick(event)} style={{ position: 'relative', width: `${crop.w}px`, height: `${crop.h}px`, overflow: 'hidden' }}>
       <img src={src} alt="image" style={{ marginLeft: `-${crop.x}px`, marginTop: `-${crop.y}px` }} />
       {objects.map((object, index) => {
         if (object.type === "arrow") {
